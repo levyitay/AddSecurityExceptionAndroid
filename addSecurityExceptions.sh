@@ -15,6 +15,9 @@ if [ ! -z "$2" ]
 	then
 		debugKeystore=$2
 	else
+    if ! type ~/.android/debug.keystore > /dev/null; then
+      keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000
+    fi
 		debugKeystore=~/.android/debug.keystore
 fi
 
@@ -34,8 +37,11 @@ if [ ! -d "$tmpDir/res/xml" ]; then
 fi
 
 cp ./network_security_config.xml $tmpDir/res/xml/.
-sed -E "s/(<application.*)(>)/\1 android\:networkSecurityConfig=\"@xml\/network_security_config\" \2 /" $tmpDir/AndroidManifest.xml > $tmpDir/AndroidManifest.xml.new
-mv $tmpDir/AndroidManifest.xml.new $tmpDir/AndroidManifest.xml
+if ! grep -q "networkSecurityConfig" $tmpDir/AndroidManifest.xml; then
+  sed -E "s/(<application.*)(>)/\1 android\:networkSecurityConfig=\"@xml\/network_security_config\" \2 /" $tmpDir/AndroidManifest.xml > $tmpDir/AndroidManifest.xml.new
+  mv $tmpDir/AndroidManifest.xml.new $tmpDir/AndroidManifest.xml
+fi
+
 
 apktool empty-framework-dir --force $tmpDir
 echo "Building new APK $newFileName"
