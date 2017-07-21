@@ -1,23 +1,22 @@
 # Add Securiy Exception to APK
 
-Google introduced on Android 7.0 new network security enhancements.
-Those new enhancements prevents 3rd party to listen to network requests coming out of the app.
+In Android 7.0, Google introduced changes to the way user Certificate Authorities (CA) are trusted. These changes prevent third-parties from listening to network requests coming out of the application:
 More info: 
 1) https://developer.android.com/training/articles/security-config.html
 2) http://android-developers.blogspot.com/2016/07/changes-to-trusted-certificate.html
 
-This script injects into the APK network security exceptions that allow 3rd party softwares, like Charles Proxy / Fidler to listen to the network requests and resposes of the app. 
+This script injects into the APK network security exceptions that allow third-party software like Charles Proxy/Fiddler to listen to the network requests and responses of some Android applications.
 
 
 ## Getting Started
 
-Download the sciprt and the xml file and place them in the same directory.
+Download the script and the XML file and place them in the same directory.
 
 ### Prerequisites
 
-You will need apktool and android sdk installed
+You will need `apktool` and the Android SDK installed
 
-I recommend using brew on Mac to install apktool
+I recommend using `brew` on Mac to install `apktool`:
 
 ```
 brew install apktool
@@ -25,8 +24,8 @@ brew install apktool
 
 ## Usage
 
-The script take 2 arguments: 
-1) Apk file path.
+The script take two arguments: 
+1) APK file path.
 2) keystore file path (**optional** - Default is: ~/.android/debug.keystore )
 
 ### Examples
