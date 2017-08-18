@@ -15,7 +15,7 @@ if [ ! -z "$2" ]
 	then
 		debugKeystore=$2
 	else
-    if ! type ~/.android/debug.keystore > /dev/null; then
+    if [ ! -f ~/.android/debug.keystore ]; then
       keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000
     fi
 		debugKeystore=~/.android/debug.keystore
