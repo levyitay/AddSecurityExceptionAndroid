@@ -30,7 +30,7 @@ new="_new.apk"
 newFileName=$filename$new
 tmpDir=/tmp/$filename
 
-apktool d -f -o $tmpDir $fullfile
+java -jar apktool.jar d -f -o $tmpDir $fullfile
 
 if [ ! -d "$tmpDir/res/xml" ]; then
 	mkdir $tmpDir/res/xml
@@ -43,8 +43,8 @@ if ! grep -q "networkSecurityConfig" $tmpDir/AndroidManifest.xml; then
 fi
 
 
-apktool empty-framework-dir --force $tmpDir
+java -jar apktool.jar empty-framework-dir --force $tmpDir
 echo "Building new APK $newFileName"
-apktool b -o ./$newFileName $tmpDir
+java -jar apktool.jar b -o ./$newFileName $tmpDir
 jarsigner -verbose -keystore $debugKeystore -storepass android -keypass android ./$newFileName androiddebugkey
 
