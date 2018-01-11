@@ -1,10 +1,4 @@
 #!/bin/bash
-if ! type apktool > /dev/null; then
-  echo "Please install apktool"
-  echo "Using Homebrew: `brew install apktool`"
-  exit -1
-fi
-
 if [ $# -eq 0 ]
   then
     echo "No arguments supplied"
