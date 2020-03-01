@@ -30,7 +30,7 @@ new="_new.apk"
 newFileName=$filename$new
 tmpDir=/tmp/$filename
 
-java -jar "$DIR/apktool.jar" d -f -o "$tmpDir" "$fullfile"
+java -jar "$DIR/apktool.jar" d -f -s -o "$tmpDir" "$fullfile"
 
 if [ ! -d "$tmpDir/res/xml" ]; then
 	mkdir "$tmpDir/res/xml"
