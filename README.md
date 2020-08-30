@@ -24,7 +24,7 @@ APKTOOL is not needed anymore.
 
 The script takes three arguments:
 
-1. (optional) -d to also make the new APK debuggeable
+1. (optional) -d to also make the new APK debuggable
 2. (required) APK file path.
 3. (optional) keystore file path (**optional** - Default is: ~/.android/debug.keystore )
 

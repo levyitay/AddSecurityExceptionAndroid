@@ -7,14 +7,14 @@ if [ $# -eq 0 ]
     echo "Usage: $0 [-d] <APK filename> [Signing Keystore]"
     echo ""
     echo "Options:"
-    echo "  -d      Make the new APK also debuggeable"
+    echo "  -d      Make the new APK also debuggable"
     echo ""
     exit -1
 fi
 
 if [[ "$1" == "-d" ]]; then 
-	echo "Scheduled to make the new APK also debuggeable."
-	makeDebuggeable=true
+	echo "Scheduled to make the new APK also debuggable."
+	makeDebuggable=true
 	shift
 fi
 
@@ -56,7 +56,7 @@ if ! grep -q "networkSecurityConfig" "$tmpDir/AndroidManifest.xml"; then
   mv "$tmpDir/AndroidManifest.xml.new" "$tmpDir/AndroidManifest.xml"
 fi
 
-if [ $makeDebuggeable ] && ! grep -q "debuggable" "$tmpDir/AndroidManifest.xml"; then
+if [ $makeDebuggable ] && ! grep -q "debuggable" "$tmpDir/AndroidManifest.xml"; then
   echo "Injecting the debuggable attribute in AndroidManifest.xml..."
   sed -E "s/(<application.*)(>)/\1 android\:debuggable=\"true\" \2 /" "$tmpDir/AndroidManifest.xml" > "$tmpDir/AndroidManifest.xml.new"
   mv "$tmpDir/AndroidManifest.xml.new" "$tmpDir/AndroidManifest.xml"
