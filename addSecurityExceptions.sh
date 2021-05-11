@@ -16,7 +16,7 @@ if [ ! -z "$2" ]
         mkdir ~/.android
       fi
       echo "No debug keystore was found, creating new one..."
-      keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000
+      keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -deststoretype pkcs12 -validity 10000
     fi
 		debugKeystore=~/.android/debug.keystore
 fi
