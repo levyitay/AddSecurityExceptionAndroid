@@ -48,7 +48,7 @@ fi
 java -jar "$DIR/apktool.jar" empty-framework-dir --force "$tmpDir"
 echo "Building temp APK $tempFileName"
 java -jar "$DIR/apktool.jar" b -o "./$tempFileName" "$tmpDir"
-jarsigner -verbose -keystore $debugKeystore -storepass android -keypass android "./$tempFileName" androiddebugkey
 zipalign -p 4 $tempFileName $newFileName
+apksigner sign --ks-key-alias androiddebugkey --ks $debugKeystore "./$newFileName"
 rm -rf $tempFileName
 echo "Resigned APK successfully $newFileName"
