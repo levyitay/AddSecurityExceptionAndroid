@@ -37,3 +37,5 @@ or
 ./addSecurityExceptions.sh myApp.apk ~/.android/debug.keystore
 
 ```
+
+Note: Password for debug keystore is 'android' - enter this when prompted while signing.
