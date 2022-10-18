@@ -13,13 +13,15 @@ This script injects into the APK network security exceptions that allow third-pa
 Download the script and the XML file and place them in the same directory.
 
 ### Prerequisites
-APKTOOL is not needed anymore.
+1. APKTOOL is not needed anymore.
 
 ~~You will need `apktool` and the Android SDK installed~~
 
 ~~I recommend using `brew` on Mac to install `apktool`:~~
 
 ~~```brew install apktool```~~
+
+2. Update line 52 with your username in addSecurityExceptions.sh
 
 ## Usage
 
