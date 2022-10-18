@@ -32,7 +32,7 @@ tempFileName=$filename$temp
 newFileName=$filename$new
 tmpDir=/tmp/$filename
 
-java -jar "$DIR/apktool.jar" d -f -s -o "$tmpDir" "$fullfile"
+java -jar "$DIR/apktool.jar" d --use-aapt2 -f -s -o "$tmpDir" "$fullfile"
 
 if [ ! -d "$tmpDir/res/xml" ]; then
 	mkdir "$tmpDir/res/xml"
@@ -45,10 +45,10 @@ if ! grep -q "networkSecurityConfig" "$tmpDir/AndroidManifest.xml"; then
 fi
 
 
-java -jar "$DIR/apktool.jar" empty-framework-dir --force "$tmpDir"
+java -jar "$DIR/apktool.jar" --use-aapt2 empty-framework-dir --force "$tmpDir"
 echo "Building temp APK $tempFileName"
-java -jar "$DIR/apktool.jar" b -o "./$tempFileName" "$tmpDir"
+java -jar "$DIR/apktool.jar" b --use-aapt2 -o "./$tempFileName" "$tmpDir"
 jarsigner -verbose -keystore $debugKeystore -storepass android -keypass android "./$tempFileName" androiddebugkey
-zipalign -p 4 $tempFileName $newFileName
+/Users/username/Library/Android/sdk/build-tools/30.0.3/zipalign -p 4 $tempFileName $newFileName
 rm -rf $tempFileName
 echo "Resigned APK successfully $newFileName"
