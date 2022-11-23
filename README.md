@@ -2,8 +2,8 @@
 
 In Android 7.0, Google introduced changes to the way user Certificate Authorities (CA) are trusted. These changes prevent third-parties from listening to network requests coming out of the application:
 More info: 
-1) https://developer.android.com/training/articles/security-config.html
-2) http://android-developers.blogspot.com/2016/07/changes-to-trusted-certificate.html
+1. https://developer.android.com/training/articles/security-config.html
+2. http://android-developers.blogspot.com/2016/07/changes-to-trusted-certificate.html
 
 This script injects into the APK network security exceptions that allow third-party software like Charles Proxy/Fiddler to listen to the network requests and responses of some Android applications.
 
@@ -19,13 +19,14 @@ APKTOOL is not needed anymore.
 
 ~~I recommend using `brew` on Mac to install `apktool`:~~
 
-~~```brew install apktool```~~
+~~`brew install apktool`~~
 
 ## Usage
 
-The script take two arguments: 
-1) APK file path.
-2) keystore file path (**optional** - Default is: ~/.android/debug.keystore )
+The script take three arguments: 
+1. (**optional**) -d to also make the new APK debuggable
+2. APK file path.
+3. keystore file path (**optional** - Default is: ~/.android/debug.keystore )
 
 ### Examples
 
@@ -34,6 +35,6 @@ The script take two arguments:
 
 or
 
-./addSecurityExceptions.sh myApp.apk ~/.android/debug.keystore
+./addSecurityExceptions.sh -d myApp.apk ~/.android/debug.keystore
 
 ```
