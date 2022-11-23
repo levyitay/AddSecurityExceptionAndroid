@@ -27,6 +27,8 @@ filename=$(basename "$fullfile")
 extension="${filename##*.}"
 filename="${filename%.*}"
 new="_new.apk"
+temp="_temp.apk"
+tempFileName=$filename$temp
 newFileName=$filename$new
 tmpDir=/tmp/$filename
 
@@ -50,7 +52,9 @@ fi
 
 
 java -jar "$DIR/apktool.jar" empty-framework-dir --force "$tmpDir"
-echo "Building new APK $newFileName"
-java -jar "$DIR/apktool.jar" b -o "./$newFileName" "$tmpDir"
-jarsigner -verbose -keystore $debugKeystore -storepass android -keypass android "./$newFileName" androiddebugkey
-
+echo "Building temp APK $tempFileName"
+java -jar "$DIR/apktool.jar" b -o "./$tempFileName" "$tmpDir"
+jarsigner -verbose -keystore $debugKeystore -storepass android -keypass android "./$tempFileName" androiddebugkey
+zipalign -p 4 $tempFileName $newFileName
+rm -rf $tempFileName
+echo "Resigned APK successfully $newFileName"
