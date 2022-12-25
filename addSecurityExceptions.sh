@@ -1,41 +1,83 @@
 #!/bin/bash
 
-if [ $# -eq 0 ]
-  then
+usage(){
     echo ""
     echo "No arguments supplied"
     echo ""
-    echo "Usage: $0 [-d] <APK filename> [Signing Keystore]"
+    echo "Usage: $0 [-d] [-k] [Signing Keystore] <APK filename>"
     echo ""
     echo "Options:"
     echo ""
-    echo "  -d      Make the new APK also debuggable"
-    echo "  [Signing Keystore]  path to signing key"
+    echo "  -d  --debuggable     Make the new APK also debuggable"
+    echo ""
+    echo "  -k  --key-store       [Signing Keystore]  path to signing key"
+    echo ""
+    echo "  -b  --build-tools     Set custom android build tools path"
+    echo "  for example: --build-tools ~/Library/Android/sdk/build-tools/"
+    echo ""
+    echo "  --help               Show this help"
     echo ""
     exit -1
+}
+
+
+if [ $# -eq 0 ]
+then
+    usage;
 fi
 
-if [[ "$1" == "-d" ]]; then 
-  echo "Will create the new APK also debuggable."
-  makeDebuggable=true
-  shift
-fi
+
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+
+  case $1 in
+    -d | --debuggable)
+      makeDebuggable=true
+      shift 1
+      ;;
+    -k | --key-store)
+    	debugKeystore="$2"
+      shift 2
+      ;;
+    -b | --build-tools)
+      search_dir="$2"
+      shift 2
+      ;;
+    --help)
+      usage;
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      apkfile_arg="$1"
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+    esac
+done
+
+
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-search_dir=~/Library/Android/sdk/build-tools
 
-BUILD_TOOLS_DIR_ARR=($search_dir/*/)
+if [ ! $search_dir ]
+  then
+    # echo "no search dir"
+    search_dir=~/Library/Android/sdk/build-tools/
+fi
+
+BUILD_TOOLS_DIR_ARR=($search_dir*/)
 
 arr_storted=($(echo "${BUILD_TOOLS_DIR_ARR[@]}" | LC_ALL=C sort -d));
 echo "Using build tools in: ${arr_storted[${#arr_storted[@]}-1]}"
 
 BUILD_TOOLS_DIR=${arr_storted[${#arr_storted[@]}-1]}
 
-if [ ! -z "$2" ]
+if [ ! $debugKeystore ]
 	then
-    echo "Using custom keystore for signing."
-		debugKeystore=$2
-	else
     if [ ! -f ~/.android/keystore.jks ]; then
       if [ ! -d ~/.android ]; then
         mkdir ~/.android
@@ -47,7 +89,8 @@ if [ ! -z "$2" ]
 fi
 
 
-fullfile=$1
+
+fullfile=$apkfile_arg
 filename=$(basename "$fullfile")
 extension="${filename##*.}"
 filename="${filename%.*}"

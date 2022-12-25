@@ -1,3 +1,7 @@
+
+## ***Important***
+**The latest update including some breaking changes in the arguments.**
+
 # Add Security Exception to APK
 
 In Android 7.0, Google introduced changes to the way user Certificate Authorities (CA) are trusted. These changes prevent third-parties from listening to network requests coming out of the application:
@@ -13,20 +17,18 @@ This script injects into the APK network security exceptions that allow third-pa
 Download the script and the XML file and place them in the same directory.
 
 ### Prerequisites
-APKTOOL is not needed anymore.
-
-~~You will need `apktool` and the Android SDK installed~~
-
-~~I recommend using `brew` on Mac to install `apktool`:~~
-
-~~`brew install apktool`~~
+* Java Installed
 
 ## Usage
 
-The script take three arguments: 
-1. (**optional**) -d to also make the new APK debuggable
-2. APK file path.
-3. keystore file path (**optional** - Default is: ~/.android/debug.keystore )
+The script arguments: 
+
+1. (**optional**) -d | --debuggable    Make the new APK also debuggable
+2. (**optional**) -k | --key-store     [Signing Keystore]  path to signing key
+3. (**optional**) -b | --build-tools   Set custom android build tools path
+                                      
+4. APK file path.
+
 
 ### Examples
 
@@ -35,6 +37,6 @@ The script take three arguments:
 
 or
 
-./addSecurityExceptions.sh -d myApp.apk ~/.android/debug.keystore
+./addSecurityExceptions.sh -d --build-tools ~/Library/Android/sdk/build-tools/ -k ~/.android/debug.keystore myApp.apk
 
 ```
