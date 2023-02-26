@@ -76,16 +76,15 @@ echo "Using build tools in: ${arr_storted[${#arr_storted[@]}-1]}"
 
 BUILD_TOOLS_DIR=${arr_storted[${#arr_storted[@]}-1]}
 
-if [ ! $debugKeystore ]
-	then
-    if [ ! -f ~/.android/keystore.jks ]; then
+if [ ! $debugKeystore ]; then
+    debugKeystore=~/.android/debug.keystore
+    if [ ! -f $debugKeystore ]; then
       if [ ! -d ~/.android ]; then
         mkdir ~/.android
       fi
       echo "No debug keystore was found, creating new one..."
-      keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000
+      keytool -genkey -v -keystore $debugKeystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000
     fi
-		debugKeystore=~/.android/keystore.jks
 fi
 
 
