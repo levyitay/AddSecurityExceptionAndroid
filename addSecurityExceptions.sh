@@ -4,18 +4,24 @@ usage(){
     echo ""
     echo "No arguments supplied"
     echo ""
-    echo "Usage: $0 [-d] [-k] [Signing Keystore] <APK filename>"
+    echo "Usage: $0 [-d] [-b <build-tools>] [-k <keystore> [-s <alias>]] <apkfile>"
     echo ""
     echo "Options:"
     echo ""
-    echo "  -d  --debuggable     Make the new APK also debuggable"
+    echo "  -d,  --debuggable"
+    echo "       Make the new APK also debuggable"
     echo ""
-    echo "  -k  --key-store       [Signing Keystore]  path to signing key"
+    echo "  -k,  --key-store <keystore>"
+    echo "       Path to signing keystore file (default: '~/.android/debug.keystore')"
     echo ""
-    echo "  -b  --build-tools     Set custom android build tools path"
-    echo "  for example: --build-tools ~/Library/Android/sdk/build-tools/"
+    echo "  -s,  --ks-key-alias <alias>"
+    echo "       Alias of signing key (default: 'androiddebugkey')"
     echo ""
-    echo "  --help               Show this help"
+    echo "  -b,  --build-tools <build-tools>"
+    echo "       Set custom Android build tools path (default: '~/Library/Android/sdk/build-tools/')"
+    echo ""
+    echo "  -h, --help"
+    echo "      Show this help"
     echo ""
     exit -1
 }
@@ -37,14 +43,18 @@ while [[ $# -gt 0 ]]; do
       shift 1
       ;;
     -k | --key-store)
-    	debugKeystore="$2"
+      debugKeystore="$2"
+      shift 2
+      ;;
+    -s | --ks-key-alias)
+      debugKeyAlias="$2"
       shift 2
       ;;
     -b | --build-tools)
       search_dir="$2"
       shift 2
       ;;
-    --help)
+    -h | --help)
       usage;
       ;;
     -*|--*)
@@ -76,16 +86,20 @@ echo "Using build tools in: ${arr_storted[${#arr_storted[@]}-1]}"
 
 BUILD_TOOLS_DIR=${arr_storted[${#arr_storted[@]}-1]}
 
-if [ ! $debugKeystore ]
-	then
-    if [ ! -f ~/.android/keystore.jks ]; then
-      if [ ! -d ~/.android ]; then
-        mkdir ~/.android
-      fi
-      echo "No debug keystore was found, creating new one..."
-      keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000
+# set default key-alias, if not passed as param
+debugKeyAlias="${debugKeyAlias:=androiddebugkey}"
+
+if [ ! $debugKeystore ]; then
+  debugKeystore=~/.android/debug.keystore
+  if [ ! -f $debugKeystore ]; then
+    if [ ! -d ~/.android ]; then
+      mkdir ~/.android
     fi
-		debugKeystore=~/.android/keystore.jks
+    echo "No debug keystore was found, creating new in $debugKeystore, alias $debugKeyAlias"
+    keytool -genkey -v -keystore $debugKeystore -storepass android -alias $debugKeyAlias -keypass android -keyalg RSA -keysize 2048 -validity 10000
+  else 
+    echo "Using default keystore $debugKeystore, alias $debugKeyAlias"
+  fi
 fi
 
 
@@ -103,7 +117,7 @@ tmpDir=/tmp/$filename
 java -jar "$DIR/apktool.jar" d -s -f -o "$tmpDir" "$fullfile"
 
 if [ ! -d "$tmpDir/res/xml" ]; then
-	mkdir "$tmpDir/res/xml"
+  mkdir "$tmpDir/res/xml"
 fi
 cp "$DIR/network_security_config.xml" "$tmpDir/res/xml/."
 if [ ! -f "$tmpDir/res/xml/network_security_config.xml" ]; then 
@@ -130,8 +144,8 @@ java -jar "$DIR/apktool.jar" --use-aapt2 b -o "./$tempFileName" "$tmpDir"
 echo "Running Zip Align on $tempFileName and creating $newFileName"
 $BUILD_TOOLS_DIR/zipalign -p 4 $tempFileName $newFileName
 
-echo "Signing temp file $newFileName"
-$BUILD_TOOLS_DIR/apksigner sign --ks $debugKeystore --ks-pass pass:android "./$newFileName"
+echo "Signing temp file $newFileName with $debugKeyAlias"
+$BUILD_TOOLS_DIR/apksigner sign --ks $debugKeystore --ks-key-alias $debugKeyAlias --ks-pass pass:android "./$newFileName"
 
 rm -rf $tempFileName
 echo "Resigned APK successfully $newFileName"
