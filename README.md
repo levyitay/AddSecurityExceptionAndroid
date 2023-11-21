@@ -23,20 +23,40 @@ Download the script and the XML file and place them in the same directory.
 
 The script arguments: 
 
-1. (**optional**) -d | --debuggable    Make the new APK also debuggable
-2. (**optional**) -k | --key-store     [Signing Keystore]  path to signing key
-3. (**optional**) -b | --build-tools   Set custom android build tools path
-                                      
-4. APK file path.
+`-d`, `--debuggable` (**optional**)
+
+Make the new APK also debuggable
+
+`-k`, `--key-store` `<keystore>` (**optional**) 
+
+Path to signing key (default *~/.android/debug.keystore*)
+
+`-s`, `--ks-key-alias` `<alias>` (**optional**) 
+
+Path to signing key (default *androiddebugkey*)
+
+`-b`, `--build-tools` `<sdk-path>` (**optional**) 
+
+Set custom android build tools path (default *~/Library/Android/sdk/build-tools/*)
 
 
 ### Examples
 
+
+Using default options:
 ```
 ./addSecurityExceptions.sh myApp.apk
 
-or
+```
 
+Specifying build-tools and keystore:
+```
 ./addSecurityExceptions.sh -d --build-tools ~/Library/Android/sdk/build-tools/ -k ~/.android/debug.keystore myApp.apk
+
+```
+
+Specifying keystore and alias:
+```
+./addSecurityExceptions.sh -d -k ~/.android/debug.keystore myApp.apk -s androiddebugkey
 
 ```
